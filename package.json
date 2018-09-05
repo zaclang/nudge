@@ -1,0 +1,20 @@
+{
+  "name": "nudge",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "log": "serverless logs -f webhook --startTime 5h"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "request": "^2.87.0",
+    "request-promise": "^4.2.2",
+    "serverless": "^1.29.2"
+  },
+  "devDependencies": {
+    "serverless-offline": "^3.25.6"
+  }
+}
