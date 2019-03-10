@@ -1,16 +1,10 @@
 const makeTransform =
 () =>
-({ event, build, job, pipeline, sender, ...rest }) => {
-  console.log(JSON.stringify({ event, build, job, pipeline, sender, ...rest }))
-
-  const notifyOn = ['build.blocked', 'build.failed'];
-
-  const details = notifyOn.includes(event) && `${build.blocked ? 'blocked' : ''}`;
-
-  const text = `${sender.name} ${event} ${details || ''}`;
-  const title = `${pipeline.name}: ${build.message}`;
-
-  return Promise.resolve({ text, title });
+({ event, build, job, pipeline, sender = {}, ...rest }) => {
+  return {
+    message: [sender.name, pipeline.name, event, build.state].filter(Boolean).join(' '),
+    emailAddress: process.env.DUMMY_EMAIL
+  }
 }
 
 module.exports = { makeTransform };

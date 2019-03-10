@@ -5,16 +5,17 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "log": "serverless logs -f webhook --startTime 5h"
+    "log": "serverless logs -f buildkite --startTime 5h -t"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "request": "^2.87.0",
-    "request-promise": "^4.2.2",
-    "serverless": "^1.29.2"
+    "@slack/client": "^4.11.0",
+    "joi": "^13.6.0",
+    "semistandard": "^13.0.1"
   },
   "devDependencies": {
-    "serverless-offline": "^3.25.6"
+    "serverless-offline": "^3.25.6",
+    "serverless": "^1.29.2"
   }
 }

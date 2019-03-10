@@ -1,10 +1,10 @@
 const { makeTransform } = require('./make-transform');
+const { makeValidate } = require('./make-validate');
 
 const makeBuildkiteService = () => {
-  const transform = makeTransform();
-
   return {
-    transform,
+    transform: makeTransform(),
+    validate: makeValidate(),
   };
 };
 

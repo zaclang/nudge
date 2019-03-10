@@ -1,24 +1,26 @@
-
-const rp = require('request-promise');
-
 const makeSend =
-({ webhookUrl, channel = 'testing' }) =>
-({ text, title, items = [] }) => {
-  console.log({ text, title, items })
-      const notification = {
-        channel,
-        text: title,
-        attachments: items.length
-          ? items.map(item => ({ text: item }))
-          : [{ text }]
-      };
+({ client, getUserByEmail }) =>
+  async ({ emailAddress, message }) => {
+    const targetUser = await getUserByEmail({ email: emailAddress });
 
-      return rp({
-        method: 'POST',
-        uri: webhookUrl,
-        json: true,
-        body: notification
-      }).promise();
-    };
+  if (!targetUser) {
+    console.error(`email: ${buildkiteUserEmail} not found`);
+    return;
+  }
+
+  const directMessage = await client.im.open({ user: targetUser.id });
+
+  const res = await client.chat.postMessage({
+    channel: directMessage.channel.id,
+    text: `Hey ${targetUser.name}`,
+    attachments: [
+      {
+        text: message
+      }
+    ]
+  });
+
+  console.log('Message sent: ', res);
+};
 
 module.exports = { makeSend };
