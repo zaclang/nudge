@@ -1,26 +1,43 @@
 const makeSend =
 ({ client, getUserByEmail }) =>
-  async ({ emailAddress, message }) => {
-    const targetUser = await getUserByEmail({ email: emailAddress });
-
+  async ({ event, build, pipeline, emailAddress = process.env.DUMMY_EMAIL }) => {
+  const targetUser = await getUserByEmail({ email: emailAddress });
   if (!targetUser) {
-    console.error(`email: ${buildkiteUserEmail} not found`);
+    console.error(`email: ${emailAddress} not found`);
     return;
   }
 
+  if (build.state !== 'build.finished' && !build.blocked) { return; }
+
   const directMessage = await client.im.open({ user: targetUser.id });
 
-  const res = await client.chat.postMessage({
+  await client.chat.postMessage({
     channel: directMessage.channel.id,
-    text: `Hey ${targetUser.name}`,
+    blocks: [
+      {
+        type: 'section',
+        text: {
+          type: 'mrkdwn',
+          text: `${targetUser.name}, your build is blocking the *${pipeline.name}* pipeline`,
+        },
+      },
+    ],
     attachments: [
       {
-        text: message
+        fallback: 'do',
+        actions: [
+          {
+            type: 'button',
+            text: 'View Build',
+            url: build.web_url,
+            style: 'primary'
+          }
+        ]
       }
     ]
   });
 
-  console.log('Message sent: ', res);
+  // console.log({ sentMessageDetails });
 };
 
 module.exports = { makeSend };

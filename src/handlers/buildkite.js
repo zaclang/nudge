@@ -10,7 +10,7 @@ const handler = event => {
   return Promise.resolve(body)
     // .then(buildkiteService.validate)
     // .then(buildkiteService.identify)
-    .then(buildkiteService.transform)
+    // .then(buildkiteService.transform)
     .then(slackService.send)
     .then(() => ({ statusCode: 200 }));
 };

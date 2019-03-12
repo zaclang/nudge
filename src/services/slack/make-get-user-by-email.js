@@ -5,10 +5,7 @@ async ({ email }) => {
     return null;
   }
   const { members } = await client.users.list();
-  return members.find(({ profile }) => {
-    console.log({profile})
-    return profile.email === email
-  });
+  return members.find(({ profile }) => profile.email === email);
 }
 
 module.exports = { makeGetUserByEmail };

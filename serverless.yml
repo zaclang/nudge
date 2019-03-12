@@ -6,7 +6,8 @@ provider:
   region: us-east-1
   versionFunctions: false
   environment:
-    SLACK_WEBHOOK_URL: ${env:SLACK_WEBHOOK_URL}
+    DUMMY_EMAIL: ${env:DUMMY_EMAIL}
+    SLACK_TOKEN: ${env:SLACK_TOKEN}
 
 plugins:
   - serverless-offline
