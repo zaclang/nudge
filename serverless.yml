@@ -13,9 +13,17 @@ plugins:
   - serverless-offline
 
 functions:
+
   buildkite:
     handler: src/handlers/buildkite.handler
     events:
       - http:
           path: buildkite
+          method: post
+
+  github:
+    handler: src/handlers/github.handler
+    events:
+      - http:
+          path: github
           method: post

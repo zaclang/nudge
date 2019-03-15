@@ -1,6 +1,9 @@
 const makeSend =
 ({ client, getUserByEmail }) =>
-  async ({ event, build, pipeline, emailAddress = process.env.DUMMY_EMAIL }) => {
+  async ({ event, build, pipeline, emailAddress = process.env.DUMMY_EMAIL, github }) => {
+    if (github) {
+      return;
+    }
   const targetUser = await getUserByEmail({ email: emailAddress });
   if (!targetUser) {
     console.error(`email: ${emailAddress} not found`);
