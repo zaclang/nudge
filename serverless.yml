@@ -14,12 +14,24 @@ plugins:
 
 functions:
 
+  buildkiteAuthorizer:
+    handler: src/authorizers/buildkite.handler
+
   buildkite:
     handler: src/handlers/buildkite.handler
     events:
       - http:
           path: buildkite
           method: post
+          cors: true
+          authorizer:
+            name: buildkiteAuthorizer
+            type: request
+            identitySource: method.request.header.X-Buildkite-Token
+
+
+  githubAuthorizer:
+    handler: src/authorizers/github.handler
 
   github:
     handler: src/handlers/github.handler
