@@ -5,3 +5,7 @@ todo:
 - [] write some unit tests
 - [] SSM for config
 - [] identify blocked pipelines & send Slack DM to the culprit
+
+
+
+
