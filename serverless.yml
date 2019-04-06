@@ -8,6 +8,7 @@ provider:
   environment:
     DUMMY_EMAIL: ${env:DUMMY_EMAIL}
     SLACK_TOKEN: ${env:SLACK_TOKEN}
+    GITHUB_WEBHOOK_SECRET: ${env:GITHUB_WEBHOOK_SECRET}
 
 plugins:
   - serverless-offline
@@ -29,13 +30,10 @@ functions:
             type: request
             identitySource: method.request.header.X-Buildkite-Token
 
-
-  githubAuthorizer:
-    handler: src/authorizers/github.handler
-
   github:
     handler: src/handlers/github.handler
     events:
       - http:
           path: github
           method: post
+          cors: true

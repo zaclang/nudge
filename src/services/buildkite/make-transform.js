@@ -20,7 +20,7 @@ const makeTransform =
   })
 
   return {
-    message: build.blocked ? message : false,
+    message: build.blocked && message,
     emailAddress: process.env.DUMMY_EMAIL
   }
 }

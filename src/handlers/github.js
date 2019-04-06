@@ -3,11 +3,11 @@ const { makeSlackService } = require('../services/slack/make-slack-service');
 const { parseEventBody } = require('../lib/parse-event');
 
 const handler = event => {
-  const githubService = makeGithubService();
+  const githubService = makeGithubService(process.env);
   const slackService = makeSlackService(process.env); // make-parse-env
-  const body = parseEventBody(event.body);
 
-  return Promise.resolve(body)
+  return githubService.authorize(event)
+    .then(event => parseEventBody(event.body))
     .then(githubService.transform)
     .then(slackService.send)
     .then(() => ({ statusCode: 200 }));
