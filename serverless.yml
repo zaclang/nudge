@@ -26,8 +26,8 @@ provider:
       Action:
         - ssm:GetParameters
       Resource:
-        - arn:aws:ssm:#{AWS::Region}:#{AWS::AccountId}:parameter/dev/badger/config/*
-        - arn:aws:ssm:#{AWS::Region}:#{AWS::AccountId}:parameter/dev/badger/secret/*
+        - arn:aws:ssm:#{AWS::Region}:#{AWS::AccountId}:parameter/${self:provider.stage}/badger/config/*
+        - arn:aws:ssm:#{AWS::Region}:#{AWS::AccountId}:parameter/${self:provider.stage}/badger/secret/*
 
 custom:
   userTableName: user-${self:provider.stage}

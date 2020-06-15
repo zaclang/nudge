@@ -15,7 +15,7 @@ const makeGetParameters = ({ stage }) => async () => {
   const params = {
     Names: [
       ...configs.map(getPath('config')),
-      ...secrets.map(getPath('secret')),
+      ...secrets.map(getPath('secret'))
     ].filter(Boolean)
   };
 
@@ -25,15 +25,14 @@ const makeGetParameters = ({ stage }) => async () => {
   } catch (e) {
     return e;
   }
-}
-
+};
 
 const formatParameters = (parameters) => {
   return parameters.Parameters.reduce((object, param) => {
-    console.log(`transforming ${param.Name}...`)
+    console.log(`transforming ${param.Name}...`);
     return { ...object, [param.Name.split('/').pop()]: param.Value };
   }, {});
-}
+};
 
 const getParameters = makeGetParameters({ stage: STAGE });
 module.exports = { getParameters };

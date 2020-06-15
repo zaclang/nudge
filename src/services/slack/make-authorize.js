@@ -1,7 +1,7 @@
 const crypto = require('crypto');
 
 const makeAuthorize = ({ signingSecret }) => event => {
-  console.log('verifying Slack request..', signingSecret.length);
+  console.log('verifying Slack request..');
 
   const timestamp = event.headers['X-Slack-Request-Timestamp'];
   const signature = event.headers['X-Slack-Signature'];
@@ -16,8 +16,11 @@ const makeAuthorize = ({ signingSecret }) => event => {
     .update(`v0:${timestamp}:${event.body}`)
     .digest('hex');
 
-  if (!crypto.timingSafeEqual(new Buffer.from(signature), new Buffer.from(calculatedSignature))) {
-    return Promise.reject();
+  if (!crypto.timingSafeEqual(
+    Buffer.from(signature),
+    Buffer.from(calculatedSignature))
+  ) {
+    return Promise.reject(new Error('invalid signature'));
   }
 
   console.log('verified');

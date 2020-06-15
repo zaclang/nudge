@@ -14,7 +14,7 @@ const handler = async event => {
     team_id: teamId,
     team_domain: teamDomain,
     user_name: userName,
-    text,
+    text
   } = parse(event.body);
 
   const { email } = await slackService.getUserById({ userId });
