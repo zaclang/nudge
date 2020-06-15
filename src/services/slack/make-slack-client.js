@@ -1,9 +1,9 @@
 const { WebClient } = require('@slack/client');
 
-const makeClient =
+const makeSlackClient =
 ({ token }) => {
   const client = new WebClient(token);
   return client;
-}
+};
 
-module.exports = { makeClient };
+module.exports = { makeSlackClient };
