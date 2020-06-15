@@ -1,18 +1,21 @@
-const { makeBuildkiteService } = require('../services/buildkite/make-buildkite-service');
-const { makeSlackService } = require('../services/slack/make-slack-service');
-const { parseEventBody } = require('../lib/parse-event');
+const { makeSlackService } = require('../services/slack');
+const { makeUserService } = require('../services/user');
 
-const handler = event => {
-  const buildkiteService = makeBuildkiteService();
-  const slackService = makeSlackService(process.env); // make-parse-env
-  const body = parseEventBody(event.body);
+const handler = async event => {
+  const userService = makeUserService(process.env);
+  const slackService = makeSlackService(process.env);
+  const user = await userService.getByEmail({ email: event.build.creator.email });
 
-  return Promise.resolve(body)
-    // .then(buildkiteService.validate)
-    // .then(buildkiteService.identify)
-    .then(buildkiteService.transform)
-    .then(slackService.send)
-    .then(() => ({ statusCode: 200 }));
+  if (user) {
+    await slackService.sendDirectMessage({
+      userId: user.slack_user_id,
+      message: event.pipeline.name
+    });
+  }
+
+  return {
+    statusCode: 200
+  };
 };
 
 module.exports = { handler };
