@@ -4,18 +4,24 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "deploy:dev": "sls --stage dev deploy",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "log": "serverless logs -f buildkite --startTime 5h -t"
+    "log": "serverless logs -f buildkite --startTime 5h -t",
+    "lint": "semistandard"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "@slack/client": "^4.11.0",
     "joi": "^13.6.0",
-    "semistandard": "^13.0.1"
+    "oprah": "^3.0.0",
+    "semistandard": "^13.0.1",
+    "serverless-pseudo-parameters": "^2.5.0",
+    "uuid": "^3.3.2"
   },
   "devDependencies": {
-    "serverless-offline": "^3.25.6",
-    "serverless": "^1.29.2"
+    "aws-sdk": "^2.696.0",
+    "serverless": "^1.29.2",
+    "serverless-offline": "^3.25.6"
   }
 }

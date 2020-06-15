@@ -1,39 +1,77 @@
-service: nudge
+service: build-badger
 frameworkVersion: ">=1.11.0 <2.0.0"
 provider:
+  stage: ${opt:stage, 'dev'}
   name: aws
-  runtime: nodejs8.10
+  runtime: nodejs12.x
   region: us-east-1
   versionFunctions: false
   environment:
-    DUMMY_EMAIL: ${env:DUMMY_EMAIL}
-    SLACK_TOKEN: ${env:SLACK_TOKEN}
-    GITHUB_WEBHOOK_SECRET: ${env:GITHUB_WEBHOOK_SECRET}
+    AWS_NODEJS_CONNECTION_REUSE_ENABLED: 1
+    STAGE: ${self:provider.stage}
+    USER_TABLE_NAME: ${self:custom.userTableName}
+    USER_EMAIL_INDEX_NAME: ${self:custom.userEmailIndexName}
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:DescribeTable
+        - dynamodb:PutItem
+        - dynamodb:Query
+        - dynamodb:DeleteItem
+      Resource:
+        - arn:aws:dynamodb:#{AWS::Region}:#{AWS::AccountId}:table/${self:custom.userTableName}
+        - arn:aws:dynamodb:#{AWS::Region}:#{AWS::AccountId}:table/${self:custom.userTableName}/*
+        - arn:aws:dynamodb:#{AWS::Region}:#{AWS::AccountId}:table/${self:custom.userTableName}/index/*
+    - Effect: Allow
+      Action:
+        - ssm:GetParameters
+      Resource:
+        - arn:aws:ssm:#{AWS::Region}:#{AWS::AccountId}:parameter/dev/badger/config/*
+        - arn:aws:ssm:#{AWS::Region}:#{AWS::AccountId}:parameter/dev/badger/secret/*
+
+custom:
+  userTableName: user-${self:provider.stage}
+  userEmailIndexName: user-email-index-${self:provider.stage}
+
+package:
+  exclude:
+    - package*.json
+    - sample*
+    - readme.md
+
 
 plugins:
   - serverless-offline
+  - serverless-pseudo-parameters
 
 functions:
-
-  buildkiteAuthorizer:
-    handler: src/authorizers/buildkite.handler
-
-  buildkite:
-    handler: src/handlers/buildkite.handler
+  register:
+    handler: src/handlers/registration.handler
     events:
       - http:
-          path: buildkite
+          path: register
           method: post
           cors: true
-          authorizer:
-            name: buildkiteAuthorizer
-            type: request
-            identitySource: method.request.header.X-Buildkite-Token
 
-  github:
-    handler: src/handlers/github.handler
-    events:
-      - http:
-          path: github
-          method: post
-          cors: true
+resources:
+  Resources:
+    UserTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:custom.userTableName}
+        AttributeDefinitions:
+          - AttributeName: userId
+            AttributeType: S
+          - AttributeName: email
+            AttributeType: S
+        KeySchema:
+          - AttributeName: userId
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
+        GlobalSecondaryIndexes:
+          - IndexName: ${self:custom.userEmailIndexName}
+            KeySchema:
+              - AttributeName: email
+                KeyType: HASH
+            Projection:
+              ProjectionType: 'ALL'
