@@ -1,21 +1,20 @@
 const AWS = require('aws-sdk');
-const ssm = new AWS.SSM({ region: 'us-east-1', apiVersion: '2014-11-06' });
+const { getParameterPaths } = require('./get-parameter-paths');
+
+const ssm = new AWS.SSM({
+  region: process.env.AWS_REGION,
+  apiVersion: '2014-11-06'
+});
+
 const { STAGE } = process.env;
 
-const configs = [];
-
-const secrets = [
-  'SLACK_TOKEN',
-  'SLACK_SIGNING_SECRET'
-];
-
 const makeGetParameters = ({ stage }) => async () => {
-  const getPath = type => name => '/' + [stage, 'badger', type, name].join('/');
+  const { configPaths, secretPaths } = getParameterPaths({ stage });
 
   const params = {
     Names: [
-      ...configs.map(getPath('config')),
-      ...secrets.map(getPath('secret'))
+      ...configPaths,
+      ...secretPaths,
     ].filter(Boolean)
   };
 

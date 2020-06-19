@@ -13,6 +13,8 @@
   "dependencies": {
     "@slack/client": "^4.11.0",
     "joi": "^13.6.0",
+    "js-yaml": "^3.14.0",
+    "lodash": "^4.17.15",
     "oprah": "^3.0.0",
     "semistandard": "^13.0.1",
     "serverless-pseudo-parameters": "^2.5.0",
