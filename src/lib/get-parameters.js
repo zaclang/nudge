@@ -21,8 +21,8 @@ const makeGetParameters = ({ stage }) => async () => {
   try {
     const parameters = await ssm.getParameters({ ...params, WithDecryption: true }).promise();
     return formatParameters(parameters);
-  } catch (e) {
-    return e;
+  } catch (error) {
+    return error;
   }
 };
 
