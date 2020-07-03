@@ -20,6 +20,8 @@ const makeGetUserByEmail =
       };
 
       const { Items } = await documentClient.query(params).promise();
+
+      console.log('found:', JSON.stringify({ Items }))
       return Items[0];
     };
 

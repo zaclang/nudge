@@ -3,8 +3,8 @@ const makeSendDirectMessage =
     async ({ userId, message }) => {
       if (!message) { return; }
 
-      const directMessage = await slackClient.im.open({
-        user: userId
+      const directMessage = await slackClient.conversations.open({
+        users: userId
       });
 
       return slackClient.chat.postMessage({
