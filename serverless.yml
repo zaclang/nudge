@@ -53,7 +53,7 @@ functions:
           method: post
           cors: true
   buildkite:
-    handler: src/handlers/buildkite.handler
+    handler: src/handlers/parse-buildkite-event.handler
   notify:
     handler: src/handlers/notify.handler
 
