@@ -1,6 +1,6 @@
 const crypto = require('crypto');
 
-const makeAuthorize = ({ signingSecret }) => event => {
+const makeAuthorize = ({ signingSecret }) => async event => {
   console.log('verifying Slack request..');
 
   const timestamp = event.headers['X-Slack-Request-Timestamp'];
@@ -20,11 +20,10 @@ const makeAuthorize = ({ signingSecret }) => event => {
     Buffer.from(signature),
     Buffer.from(calculatedSignature))
   ) {
-    return Promise.reject(new Error('invalid signature'));
+    throw new Error('invalid signature');
   }
 
-  console.log('verified');
-  return Promise.resolve(event);
+  return event;
 };
 
 module.exports = { makeAuthorize };
