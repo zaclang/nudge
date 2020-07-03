@@ -1,4 +1,4 @@
-service: build-badger
+service: badger
 frameworkVersion: ">=1.11.0 <2.0.0"
 provider:
   stage: ${opt:stage, 'dev'}
@@ -39,19 +39,40 @@ package:
     - sample*
     - readme.md
 
-
 plugins:
   - serverless-offline
   - serverless-pseudo-parameters
+  - serverless-step-functions
 
 functions:
-  register:
+  registration:
     handler: src/handlers/registration.handler
     events:
       - http:
           path: register
           method: post
           cors: true
+  buildkite:
+    handler: src/handlers/buildkite.handler
+  notify:
+    handler: src/handlers/notify.handler
+
+stepFunctions:
+  stateMachines:
+    buildkiteEvent:
+      name: myStateMachine
+      definition:
+        Comment: "this is a comment"
+        StartAt: ParseBuildkiteEvent
+        States:
+          ParseBuildkiteEvent:
+            Type: Task
+            Resource: "arn:aws:lambda:#{AWS::Region}:#{AWS::AccountId}:function:${self:service}-${opt:stage}-buildkite"
+            Next: NotifyStakeholders
+          NotifyStakeholders:
+            Type: Task
+            Resource: "arn:aws:lambda:#{AWS::Region}:#{AWS::AccountId}:function:${self:service}-${opt:stage}-notify"
+            End: true
 
 resources:
   Resources:
