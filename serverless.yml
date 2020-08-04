@@ -5,6 +5,7 @@ provider:
   name: aws
   runtime: nodejs12.x
   region: us-east-1
+  endpointType: regional
   versionFunctions: false
   environment:
     AWS_NODEJS_CONNECTION_REUSE_ENABLED: 1
@@ -33,6 +34,14 @@ custom:
   userTableName: user-${self:provider.stage}
   userEmailIndexName: user-email-index-${self:provider.stage}
 
+  customDomain:
+    domainName: badger.zaclang.com
+    stage: ${opt:stage}
+    certificateName: "*.zaclang.com"
+    basePath: api
+    createRoute53Record: false
+    endpointType: 'regional'
+
 package:
   exclude:
     - package*.json
@@ -43,6 +52,7 @@ plugins:
   - serverless-offline
   - serverless-pseudo-parameters
   - serverless-step-functions
+  - serverless-domain-manager
 
 functions:
   registration:
@@ -51,6 +61,13 @@ functions:
       - http:
           path: register
           method: post
+          cors: true
+  hello:
+    handler: src/handlers/hello.handler
+    events:
+      - http:
+          path: hello
+          method: get
           cors: true
   buildkite:
     handler: src/handlers/parse-buildkite-event.handler
