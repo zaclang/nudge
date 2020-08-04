@@ -5,6 +5,6 @@ const parseEventBody = body => {
     console.error(error);
     return {};
   }
-}
+};
 
 module.exports = { parseEventBody };

@@ -1,0 +1,9 @@
+service: badger-service
+provider:
+  name: ssm
+
+secret:
+  path: /${stage}/badger/secret
+  required:
+    SLACK_TOKEN: "Token from https://api.slack.com/apps"
+    SLACK_SIGNING_SECRET: "secret from https://api.slack.com/apps"
