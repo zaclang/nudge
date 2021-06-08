@@ -2,6 +2,11 @@ service: badger
 frameworkVersion: ">=1.11.0 <2.0.0"
 provider:
   stage: ${opt:stage, 'dev'}
+  deploymentBucket:
+    name: com.zaclang.badger.${self:provider.region}.deploys
+    serverSideEncryption: AES256
+    accelerate: true
+    blockPublicAccess: true
   name: aws
   runtime: nodejs12.x
   region: us-east-1
@@ -31,6 +36,10 @@ provider:
         - arn:aws:ssm:#{AWS::Region}:#{AWS::AccountId}:parameter/${self:provider.stage}/badger/secret/*
 
 custom:
+  serverless-layers:
+    packageManager: yarn
+    dependenciesPath: ./package.json
+
   userTableName: user-${self:provider.stage}
   userEmailIndexName: user-email-index-${self:provider.stage}
 
@@ -53,6 +62,8 @@ plugins:
   - serverless-pseudo-parameters
   - serverless-step-functions
   - serverless-domain-manager
+  - serverless-layers
+  - serverless-deployment-bucket
 
 functions:
   registration:

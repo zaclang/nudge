@@ -12,16 +12,19 @@
   "license": "ISC",
   "dependencies": {
     "@slack/web-api": "^5.10.0",
+    "aws-sdk": "^2.918.0",
     "joi": "^13.6.0",
     "js-yaml": "^3.14.0",
-    "lodash": "^4.17.15"
+    "lodash": "^4.17.15",
+    "mjml": "^4.9.3"
   },
   "devDependencies": {
-    "aws-sdk": "^2.696.0",
     "oprah": "^3.0.1",
     "semistandard": "^14.2.2",
     "serverless": "^1.29.2",
+    "serverless-deployment-bucket": "^1.5.1",
     "serverless-domain-manager": "^4.2.0",
+    "serverless-layers": "^2.3.3",
     "serverless-offline": "^3.25.6",
     "serverless-pseudo-parameters": "^2.5.0",
     "serverless-step-functions": "^2.21.1"
